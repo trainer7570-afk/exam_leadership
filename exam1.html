@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>امتحان القيادة التعليمية 2025 - تفاعلي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900 min-h-screen text-white flex items-center justify-center p-4">
+
+    <div class="w-full max-w-2xl bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-6 md:p-8">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+            <div>
+                <h1 class="text-xl md:text-2xl font-bold text-yellow-400">امتحان القيادة التعليمية 2025</h1>
+                <p class="text-xs text-gray-300 mt-1">إعداد المشرف التربوي د. إياد الطيطي</p>
+            </div>
+            <div id="timer-box" class="flex items-center gap-2 bg-red-500/20 border border-red-500 text-red-300 px-4 py-2 rounded-xl font-bold text-lg">
+                <span id="time-left">20</span> ثانية
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-white/20 h-2 rounded-full mb-6 overflow-hidden">
+            <div id="progress-bar" class="bg-yellow-400 h-full transition-all duration-300" style="width: 100%;"></div>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quiz-screen">
+            <div class="flex justify-between items-center text-sm text-gray-300 mb-2">
+                <span id="question-number">السؤال 1 من 16</span>
+            </div>
+            <h2 id="question-text" class="text-lg md:text-xl font-semibold mb-6 leading-relaxed">جاري تحميل السؤال...</h2>
+            
+            <div id="options-container" class="space-y-3">
+                <!-- Options will be injected here -->
+            </div>
+        </div>
+
+        <!-- Result Container (Hidden initially) -->
+        <div id="result-screen" class="hidden text-center py-8">
+            <h2 class="text-3xl font-black text-yellow-400 mb-4">انتهى الامتحان!</h2>
+            <p id="score-text" class="text-xl mb-6">لقد حصلت على 0 من 16</p>
+            <div id="feedback-message" class="text-lg mb-8 text-gray-200">أداء ممتاز!</div>
+            <button onclick="restartQuiz()" class="bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-bold px-8 py-3 rounded-xl shadow-lg transition-all transform hover:scale-105">
+                إعادة المحاولة
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "1- إتاحة القدرة على التحليل الذاتي وتوفير المهارات الاجتماعية لتمكين الأفراد من دعائم التعلم:",
+                options: [
+                    "التعلم من أجل أن تعرف",
+                    "التعلم من أجل العيش المشترك",
+                    "التعلم من أجل أن تفعل",
+                    "التعلم من أجل أن نكون"
+                ],
+                correct: 3
+            },
+            {
+                question: "2- حسب أنموذج اوبشتاين، التعلم يكون غايته من:",
+                options: [
+                    "التعلم من أجل أن تعرف",
+                    "التعلم من أجل أن نكون",
+                    "التعلم من أجل أن تفعل",
+                    "التعلم من أجل العيش المشترك"
+                ],
+                correct: 1
+            },
+            {
+                question: "3- تزويد الطالب بالأدوات المعرفية، يُعد هذا التعليم من أجل:",
+                options: [
+                    "أن تفعل",
+                    "أن تكون",
+                    "أن تعرف",
+                    "العيش المشترك"
+                ],
+                correct: 2
+            },
+            {
+                question: "4- من أساليب وطرق جمع البيانات التي تمكن الباحث من دراسة وفهم التعبيرات النسبية للمجيب، والاطلاع على مدى انفعاله وتأثيره بالمعلومات التي يقدمها:",
+                options: [
+                    "الاختبارات",
+                    "الملاحظة المباشرة",
+                    "المقابلة",
+                    "الاستبانة"
+                ],
+                correct: 2
+            },
+            {
+                question: "5- من أساليب وطرق جمع البيانات التي تمكن الباحث من الاطلاع على السجلات، والتقارير، والمذكرات المتوفرة والتي أعدها الآخرون:",
+                options: [
+                    "الملاحظة غير المباشرة",
+                    "الملاحظة المباشرة",
+                    "المقابلة",
+                    "الاستبانة"
+                ],
+                correct: 0
+            },
+            {
+                question: "6- ما يميز مرحلة التطبيع من مراحل تطور فريق العمل:",
+                options: [
+                    "استعراض ومحاولة الاتفاق على الأهداف والمهام واختيار وتحديد القائد",
+                    "العمل وتنفيذ المهام التي سبق وتم الاتفاق الجماعي عليها",
+                    "التعارف والتألف والاتفاق على الفكرة العامة",
+                    "الصياغة الجماعية لأسس وقواعد العلاقات بين أفراد الجماعة وأسلوب العمل وآليات حل المشكلات"
+                ],
+                correct: 3
+            },
+            {
+                question: "7- ما يميز مرحلة الصراع من مراحل تطور فريق العمل:",
+                options: [
+                    "استعراض ومحاولة الاتفاق على الأهداف والمهام واختيار وتحديد القائد",
+                    "العمل وتنفيذ المهام التي سبق وتم الاتفاق الجماعي عليها",
+                    "التعارف والتألف والاتفاق على الفكرة العامة",
+                    "الصياغة الجماعية لأسس وقواعد العلاقات بين أفراد الجماعة وأسلوب العمل وآليات حل المشاكل"
+                ],
+                correct: 0
+            },
+            {
+                question: "8- ما يميز مرحلة التكوين من مراحل تطور فريق العمل:",
+                options: [
+                    "استعراض ومحاولة الاتفاق على الأهداف والمهام واختيار وتحديد القائد",
+                    "العمل وتنفيذ المهام التي سبق وتم الاتفاق الجماعي عليها",
+                    "التعارف والتألف والاتفاق على الفكرة العامة",
+                    "الصياغة الجماعية لأسس وقواعد العلاقات بين أفراد الجماعة وأسلوب العمل وآليات حل المشاكل"
+                ],
+                correct: 2
+            },
+            {
+                question: "9- يرتبط فهم كيفية إنجاز مهام وفق تصميم أو شكل معين، وفهم الرسوم بالذكاء:",
+                options: [
+                    "الشخصي",
+                    "المنطقي الرياضي",
+                    "الجسدي الحركي",
+                    "المكاني البصري"
+                ],
+                correct: 3
+            },
+            {
+                question: "10- إذا اضطر ستة من المعلمين في مدرستك إلى مغادرة المدرسة لساعتين فإنك:",
+                options: [
+                    "تصمم أدوات لمعرفة أسباب المغادرة",
+                    "تعمل على دمج الشعب الصفية",
+                    "تكلف الإداريين بإشغال الحصص",
+                    "تعمل على مغادرة الطلبة للمدرسة"
+                ],
+                correct: 1
+            },
+            {
+                question: "11- المرحلة الثالثة من أجل صناعة القرار هي:",
+                options: [
+                    "تحديد المشكلة",
+                    "المتابعة",
+                    "البحث عن بدائل",
+                    "اختيار البديل المناسب"
+                ],
+                correct: 2
+            },
+            {
+                question: "12- الذكاء المستقل عن بقية القدرات الأخرى هو الذكاء:",
+                options: [
+                    "اللغوي",
+                    "المنطقي الرياضي",
+                    "الجسدي الحركي",
+                    "الموسيقي"
+                ],
+                correct: 3
+            },
+            {
+                question: "13- الأقدر على تحديد نوع الحاجة المهنية للمعلم هو:",
+                options: [
+                    "الاستشاري",
+                    "مدير المدرسة",
+                    "المعلم نفسه",
+                    "تقويم الأداء"
+                ],
+                correct: 2
+            },
+            {
+                question: "14- نمط القيادة البيروقراطية يظهر فيها:",
+                options: [
+                    "السلوكات المتداخلة المعيقة للأهداف المرجوة",
+                    "اتخاذ القرارات اللازمة بشكل جماعي",
+                    "توثيق كل كبيرة وصغيرة داخل النظام",
+                    "عمل الجماعة والفريق بالكامل يتم بمعرفة القائد"
+                ],
+                correct: 2
+            },
+            {
+                question: "15- نمط القيادة المتساهلة (الفوضاوية) يظهر فيها:",
+                options: [
+                    "السلوكات المتداخلة المعيقة للأهداف المرجوة",
+                    "اتخاذ القرارات اللازمة بشكل جماعي",
+                    "توثيق كل كبيرة وصغيرة داخل النظام",
+                    "عمل الجماعة والفريق بالكامل يتم بمعرفة القائد"
+                ],
+                correct: 0
+            },
+            {
+                question: "16- ثقافة التعلم للجميع تعني:",
+                options: [
+                    "المدرسة التي تركز على تعليم محو الأمية",
+                    "المدرسة التي تركز على تعلم الجميع",
+                    "المدرسة التي تركز على تعلم كل من المتعلم والمعلم والقائد التربوي",
+                    "كل ما ذكر غير صحيح"
+                ],
+                correct: 2
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let timeLeft = 20;
+        let timer;
+        let answered = false;
+
+        const questionNumberEl = document.getElementById("question-number");
+        const questionTextEl = document.getElementById("question-text");
+        const optionsContainerEl = document.getElementById("options-container");
+        const timeLeftEl = document.getElementById("time-left");
+        const progressBarEl = document.getElementById("progress-bar");
+        const quizScreen = document.getElementById("quiz-screen");
+        const resultScreen = document.getElementById("result-screen");
+        const scoreText = document.getElementById("score-text");
+        const feedbackMessage = document.getElementById("feedback-message");
+
+        function startQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            quizScreen.classList.remove("hidden");
+            resultScreen.classList.add("hidden");
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            clearInterval(timer);
+            timeLeft = 20;
+            timeLeftEl.textContent = timeLeft;
+            progressBarEl.style.width = "100%";
+            answered = false;
+
+            if (currentQuestion >= questions.length) {
+                showResult();
+                return;
+            }
+
+            const q = questions[currentQuestion];
+            questionNumberEl.textContent = `السؤال ${currentQuestion + 1} من ${questions.length}`;
+            questionTextEl.textContent = q.question;
+
+            optionsContainerEl.innerHTML = "";
+            q.options.forEach((option, index) => {
+                const btn = document.createElement("button");
+                btn.className = "w-full text-right p-4 rounded-xl bg-white/5 hover:bg-white/20 border border-white/10 transition-all font-medium text-white flex items-center justify-between";
+                btn.innerHTML = `<span>${option}</span> <span class="w-6 h-6 rounded-full border border-white/30 flex items-center justify-center text-xs text-gray-300">${String.fromCharCode(65 + index)}</span>`;
+                btn.onclick = () => selectOption(index);
+                optionsContainerEl.appendChild(btn);
+            });
+
+            startTimer();
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                timeLeftEl.textContent = timeLeft;
+                progressBarEl.style.width = `${(timeLeft / 20) * 100}%`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    handleTimeout();
+                }
+            }, 1000);
+        }
+
+        function handleTimeout() {
+            if (answered) return;
+            answered = true;
+            highlightCorrectAnswer();
+            setTimeout(nextQuestion, 1500);
+        }
+
+        function selectOption(selectedIndex) {
+            if (answered) return;
+            answered = true;
+            clearInterval(timer);
+
+            const q = questions[currentQuestion];
+            const buttons = optionsContainerEl.getElementsByTagName("button");
+
+            if (selectedIndex === q.correct) {
+                score++;
+                buttons[selectedIndex].classList.remove("bg-white/5", "hover:bg-white/20");
+                buttons[selectedIndex].classList.add("bg-green-600/80", "border-green-400");
+            } else {
+                buttons[selectedIndex].classList.remove("bg-white/5", "hover:bg-white/20");
+                buttons[selectedIndex].classList.add("bg-red-600/80", "border-red-400");
+                buttons[q.correct].classList.remove("bg-white/5", "hover:bg-white/20");
+                buttons[q.correct].classList.add("bg-green-600/80", "border-green-400");
+            }
+
+            setTimeout(nextQuestion, 1500);
+        }
+
+        function highlightCorrectAnswer() {
+            const q = questions[currentQuestion];
+            const buttons = optionsContainerEl.getElementsByTagName("button");
+            buttons[q.correct].classList.remove("bg-white/5", "hover:bg-white/20");
+            buttons[q.correct].classList.add("bg-green-600/80", "border-green-400");
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function showResult() {
+            quizScreen.classList.add("hidden");
+            resultScreen.classList.remove("hidden");
+            scoreText.textContent = `لقد حصلت على ${score} من ${questions.length}`;
+            
+            const percentage = (score / questions.length) * 100;
+            if (percentage >= 80) {
+                feedbackMessage.textContent = "ممتاز جداً! أنت مستعد تماماً لاجتياز اختبار القيادة التعليمية.";
+            } else if (percentage >= 50) {
+                feedbackMessage.textContent = "جيد! يمكنك مراجعة الأسئلة مرة أخرى لتحسين مستواك.";
+            } else {
+                feedbackMessage.textContent = "تحتاج لمزيد من المراجعة والاطلاع على المادة العلمية.";
+            }
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+
+        startQuiz();
+    </script>
+</body>
+</html>
